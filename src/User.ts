@@ -1,4 +1,3 @@
-// This file contains the state of the user module
 export default {
   name: '',
   email: '',
