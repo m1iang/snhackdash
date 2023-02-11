@@ -9,6 +9,9 @@ import { OhVueIcon, addIcons } from "oh-vue-icons";
 import titleMixin from './mixins/titleMixin'
 import router from './router'
 
+import { HiLogin, HiLogout, HiSolidChevronRight } from "oh-vue-icons/icons";
+
+addIcons(HiLogin, HiLogout, HiSolidChevronRight)
 
 
 createApp(App)
