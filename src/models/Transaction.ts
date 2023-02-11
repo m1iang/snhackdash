@@ -1,4 +1,4 @@
-export default {
+type Transaction = {
   toUser: '',
   fromUser: '',
   snackToBeDelivered: '',
@@ -7,3 +7,5 @@ export default {
   toUserSolution: '',
   fromUserReceivedSolution: false,
 }
+
+export default Transaction;

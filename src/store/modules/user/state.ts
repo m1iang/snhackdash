@@ -2,7 +2,6 @@
 export default {
   name: '',
   email: '',
-  token: '',
   uid: '',
   avatar: '',
   introduction: '',

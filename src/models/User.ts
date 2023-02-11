@@ -1,7 +1,6 @@
-export default {
+type User = {
   name: '',
   email: '',
-  token: '',
   uid: '',
   avatar: '',
   introduction: '',
@@ -13,3 +12,5 @@ export default {
   solutionAdaquatelyAnsweredRating: 100, // 100 is the highest value for computing the rating of a user's solutions
   solutionAsJokeAnsweredFlags: 0,
 }
+
+export default User;
