@@ -3,6 +3,7 @@ import NotFound from '@/views/NotFound.vue';
 import Login from '@/views/Login.vue';
 import Feed from '@/views/Feed.vue';
 import Signup from '@/views/Signup.vue';
+import RequestPage from '@/views/RequestPage.vue';
 
 const routes = [
   {
@@ -19,6 +20,14 @@ const routes = [
     path: '/dashers',
     name: 'Feed',
     component: Feed,
+    meta: {
+      authRequired: true,
+    }
+  },
+  {
+    path: '/request',
+    name: 'Request',
+    component: RequestPage,
     meta: {
       authRequired: true,
     }

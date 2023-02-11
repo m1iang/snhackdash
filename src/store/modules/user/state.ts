@@ -5,6 +5,7 @@ export default {
   uid: '',
   avatar: '',
   introduction: '',
+  activeRequest: {},
   favouriteSnacks: [],
   solutionsGiven: [],
   solutionsReceived: [],

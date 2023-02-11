@@ -12,6 +12,7 @@ export default {
       name: name,
       email: email,
       uid: id,
+      activeRequest: {},
       avatar: avatar,
       introduction: '',
       favouriteSnacks: [],
@@ -27,8 +28,18 @@ export default {
     });
   },
 
+  async fetchUserFromDatabase(context: any, userId: any) {
+    const db = useFirestore();
+    const userDoc = doc(db, 'users', userId);
+    const user = await getDoc(userDoc);
+    if (user.exists()) {
+      context.commit('SET_USER', user.data());
+    } else {
+      console.log('No such document!');
+    }
+  },
 
-  async updateUserInDatabase(context: any, { id, email, name, avatar, introduction, favouriteSnacks, solutionsGiven, solutionsReceived, snacksReceived, snacksGiven, solutionAdaquatelyAnsweredRating, solutionAsJokeAnsweredFlags }: any) {
+  async updateUserInDatabase(context: any, { id, email, name, avatar, introduction, favouriteSnacks, solutionsGiven, solutionsReceived, snacksReceived, snacksGiven, solutionAdaquatelyAnsweredRating, solutionAsJokeAnsweredFlags, activeRequest }: any) {
     const db = useFirestore();
     const userInStore = store.getters['user/getUser'];
     // if there is a new value for a field, use it, otherwise use the value from the store
@@ -36,6 +47,7 @@ export default {
       name: name ? name : userInStore.name,
       email: email ? email : userInStore.email,
       uid: id ? id : userInStore.uid,
+      activeRequest: activeRequest ? activeRequest : userInStore.activeRequest,
       avatar: avatar ? avatar : userInStore.avatar,
       introduction: introduction ? introduction : userInStore.introduction,
       favouriteSnacks: favouriteSnacks ? favouriteSnacks : userInStore.favouriteSnacks,
@@ -51,15 +63,24 @@ export default {
     });
   },
 
-  async makeAWillDashPost(context: any, { fromUser, question }: any) {
+  async makeAWillDashPost(context: any, { fromUser, question, description }: any) {
     const db = useFirestore();
     const dashPost: DashPost = {
       fromUser: fromUser,
       question: question,
+      description: description,
     };
     await setDoc(doc(db, 'dashPosts', dashPost.fromUser), {
       dashPost
     });
+    const user = await getDoc(doc(db, 'users', dashPost.fromUser));
+    if (user.exists()) {
+      await setDoc(doc(db, 'users', dashPost.fromUser), {
+        user: {
+          activeRequest: dashPost
+        }
+      })
+    }
   },
 
   // this transaction is from the side of the person that has a solution and wants to be delivered a snack

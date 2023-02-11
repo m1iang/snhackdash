@@ -15,7 +15,7 @@
           >
           <router-link
             class="text-lg text-white hover:underline hover:decoration-[#fc935b] hover:decoration-2 underline-offset-4"
-            to="/"
+            to="/dashers"
             >Order</router-link
           >
           <router-link to="/login"

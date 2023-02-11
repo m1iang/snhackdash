@@ -3,6 +3,7 @@ type User = {
   email: '',
   uid: '',
   avatar: '',
+  activeRequest: {},
   introduction: '',
   favouriteSnacks: [],
   solutionsGiven: [],

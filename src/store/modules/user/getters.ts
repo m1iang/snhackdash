@@ -14,5 +14,6 @@ export default {
       solutionAdaquatelyAnsweredRating: state.solutionAdaquatelyAnsweredRating,
       solutionAsJokeAnsweredFlags: state.solutionAsJokeAnsweredFlags,
     }
-  }
+  },
+
 }
