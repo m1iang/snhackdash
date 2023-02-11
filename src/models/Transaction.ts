@@ -1,11 +1,12 @@
 type Transaction = {
+  id: string,
   toUser: '',
   fromUser: '',
   snackToBeDelivered: '',
-  isPendingDelivery: true,
-  isDelivered: false,
+  isPendingDelivery: boolean, // default false
+  isDelivered: boolean, // default false
   toUserSolution: '',
-  fromUserReceivedSolution: false,
+  fromUserReceivedSolution: boolean, // default false
 }
 
 export default Transaction;
