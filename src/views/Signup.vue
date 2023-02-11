@@ -1,5 +1,6 @@
 <script lang="ts">
 import { store } from "@/store";
+import { BiArrowRightSquareFill } from "oh-vue-icons/icons";
 
 export default {
   title: "Sign up",
@@ -35,7 +36,14 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return store.getters["auth/isLoggedIn"];
+      const isLoggedIn = store.getters["auth/isLoggedIn"];
+      if (isLoggedIn === null) {
+        return false;
+      } else if (isLoggedIn === true) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   methods: {
@@ -49,22 +57,106 @@ export default {
       });
     },
   },
+  components: {
+    BiArrowRightSquareFill,
+  },
 };
 </script>
 <template>
-  <div class="signup" v-if="!isLoggedIn">
-    <h1>Sign up</h1>
-    <form action="" @submit.prevent="signup">
-      <input type="text" v-model="firstName" placeholder="first name" />
-      <input type="text" v-model="lastName" placeholder="last name" />
-      <input type="email" v-model="email" placeholder="email name" />
-      <input type="password" v-model="password" placeholder="password" />
-      <input type="password" v-model="confirmPassword" placeholder="confirm password" />
-      <button @click="signup">submit</button>
-    </form>
-  </div>
-  <div class="" v-else>
-    <p>You are already logged in. Please head to home</p>
+  <div class="signup">
+    <div class="container mx-auto">
+      <div class="px-24">
+        <section class="">
+          <div
+            class="flex flex-col items-center justify-center px-6 mx-auto md:h-screen lg:py-0"
+          >
+            <a
+              href="#"
+              class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+            >
+              <img
+                class="w-24 h-24 mr-2 rounded-full"
+                src="@/assets/images/snhackdash.png"
+                alt="logo"
+              />
+              <span class="text-3xl px-2 font-semibold text-gray-900 dark:text-white"
+                >Sign up to<br />
+                Snhackdash
+              </span>
+            </a>
+            <div
+              class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+            >
+              <div class="p-6 sm:p-8">
+                <div class="">
+                  <div class="pb-4">
+                    <div class="flex flex-col space-y-2">
+                      <form @submit.prevent="signup" class="flex flex-col">
+                        <div class="py-2 space-y-2">
+                          <div class="flex flex-row space-x-2">
+                            <input
+                              type="text"
+                              v-model="firstName"
+                              placeholder="First Name"
+                              class="px-4 w-1/2 py-2 text-gray-700 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-orange-500 focus:outline-none focus:shadow-outline-orange dark:focus:shadow-outline-gray"
+                            />
+                            <input
+                              type="text"
+                              v-model="lastName"
+                              placeholder="Last Name"
+                              class="px-4 w-1/2 py-2 text-gray-700 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-orange-500 focus:outline-none focus:shadow-outline-orange dark:focus:shadow-outline-gray"
+                            />
+                          </div>
+                          <div class="flex flex-row">
+                            <input
+                              type="password"
+                              v-model="password"
+                              placeholder="Enter your password"
+                              class="grow px-4 py-2 text-gray-700 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-orange-500 focus:outline-none focus:shadow-outline-orange dark:focus:shadow-outline-gray"
+                            />
+                          </div>
+                          <div class="flex flex-row">
+                            <input
+                              type="password"
+                              v-model="confirmPassword"
+                              placeholder="Confirm your password"
+                              class="grow px-4 py-2 text-gray-700 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-orange-500 focus:outline-none focus:shadow-outline-orange dark:focus:shadow-outline-gray"
+                            />
+                          </div>
+                        </div>
+                        <div class="flex flex-row py-2 pb-4">
+                          <input
+                            type="email"
+                            v-model="email"
+                            placeholder="Enter your email"
+                            class="grow px-4 py-2 text-gray-700 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:border-orange-500 focus:outline-none focus:shadow-outline-orange dark:focus:shadow-outline-gray"
+                          />
+                          <button type="button" @click="signup">
+                            <v-icon
+                              scale="2.5"
+                              class="transition-all duration-500 ease-in-out"
+                              name="bi-arrow-right-square-fill"
+                            ></v-icon>
+                          </button>
+                        </div>
+                        <div class="rounded-lg bg-slate-200 p-4">
+                          <p>
+                            Already have an account? Sign in
+                            <router-link to="/login" class="hover:underline text-blue-500"
+                              >here</router-link
+                            >.
+                          </p>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
   </div>
 </template>
 <style scoped></style>
