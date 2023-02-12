@@ -62,6 +62,11 @@ export default {
     navigateToSendSolutionPageWithRequestId(requestId: any) {
       router.push({ path: "/solution", query: { id: requestId } });
     },
+    markAsReadSolution(requestId: any) {
+      store.dispatch("user/markSolutionAsRead", {
+        requestId: requestId,
+      });
+    },
     acceptSolution(requestId: any) {
       store.dispatch("user/acceptSolution", {
         requestId: requestId,
@@ -391,8 +396,18 @@ export default {
             class="p-5 border border-2 border-gray-300 hover:border-[#fc935b] rounded-lg w-full"
             v-else-if="canDisplaySolution === 'true'"
           >
-            <h1 class="font-semibold text-xl text-[#fc935b]">Your solution 🎉</h1>
-            <p v-html="displaySolution"></p>
+            <div class="" v-if="displaySolution">
+              <h1 class="font-semibold text-xl text-[#fc935b]">Your solution 🎉</h1>
+              <p v-html="displaySolution"></p>
+              <div class="pt-12">
+                <button
+                  @click="markAsReadSolution(findMyActiveRequest.requestId)"
+                  class="py-2 px-3 bg-orange-300"
+                >
+                  Mark as finished reading.
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

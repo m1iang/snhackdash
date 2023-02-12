@@ -179,12 +179,24 @@ export default {
     await updateDoc(finalRequestDoc, {
       status: "delivery_complete",
       solution: solution,
-      completedTransaction: "true",
     });
 
     context.dispatch("user/fetchSolution", { requestId: requestId }, { root: true });
 
 
+    router.push('/dashboard');
+  },
+
+  async markSolutionAsRead(context: any, { requestId }: any) {
+    const db = useFirestore();
+    const requestRef = collection(db, "requests");
+    const requestRefQuery = query(requestRef, where("requestId", "==", requestId));
+    const requestRefQuerySnapshot = await getDocs(requestRefQuery);
+    const finalRequestDoc = requestRefQuerySnapshot.docs[0].ref;
+    await updateDoc(finalRequestDoc, {
+      status: "solution_read",
+      completedTransaction: "true",
+    });
     router.push('/dashboard');
   },
 
