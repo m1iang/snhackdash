@@ -114,7 +114,6 @@ export default {
         (delivery: any) => delivery.solutionUser === userId
       );
       if (currentUserIsDasherDelivery) {
-        console.log(currentUserIsDasherDelivery.deliveryFinished);
         return currentUserIsDasherDelivery.deliveryFinished;
       } else if (currentUserIsSolutionProviderDelivery) {
         return currentUserIsSolutionProviderDelivery.deliveryFinished;
