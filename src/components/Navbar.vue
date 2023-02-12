@@ -18,7 +18,7 @@
             to="/dashers"
             >Order</router-link
           >
-          <router-link to="/login"
+          <router-link v-if="isLoggedIn == false" to="/login"
             ><v-icon name="hi-login" flip="horizontal" fill="#fc935b" scale="1.2">
             </v-icon>
           </router-link>
@@ -54,6 +54,7 @@ export default {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         store.dispatch("auth/setUser", user);
+        console.log("user is logged in");
       } else {
         store.dispatch("auth/setUser", null);
       }
@@ -61,7 +62,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      const isLoggedIn = store.getters["auth/isLoggedIn"];
+      const isLoggedIn = store.getters["auth/getUserIsLoggedIn"];
       if (isLoggedIn === null) {
         return false;
       } else if (isLoggedIn === true) {

@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue';
 import Feed from '@/views/Feed.vue';
 import Signup from '@/views/Signup.vue';
 import RequestPage from '@/views/RequestPage.vue';
+import SubmitSolution from '@/views/SolutionForm.vue';
 
 const routes = [
   {
@@ -17,7 +18,7 @@ const routes = [
     component: Login,
   },
   {
-    path: '/dashers',
+    path: '/dashboard',
     name: 'Feed',
     component: Feed,
     meta: {
@@ -31,6 +32,11 @@ const routes = [
     meta: {
       authRequired: true,
     }
+  },
+  {
+    path: '/solution',
+    name: 'SubmitSolution',
+    component: SubmitSolution,
   },
   {
     path: '/signup',

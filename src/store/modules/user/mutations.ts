@@ -14,20 +14,8 @@ export default {
   SET_INTRODUCTION(state: any, introduction: string) {
     state.introduction = introduction;
   },
-  SET_FAVOURITE_SNACKS(state: any, favouriteSnacks: string[]) {
-    state.favouriteSnacks = favouriteSnacks;
-  },
-  SET_SOLUTIONS_GIVEN(state: any, solutionsGiven: string[]) {
-    state.solutionsGiven = solutionsGiven;
-  },
-  SET_SOLUTIONS_RECEIVED(state: any, solutionsReceived: string[]) {
-    state.solutionsReceived = solutionsReceived;
-  },
-  SET_SNACKS_RECEIVED(state: any, snacksReceived: string[]) {
-    state.snacksReceived = snacksReceived;
-  },
-  SET_SNACKS_GIVEN(state: any, snacksGiven: string[]) {
-    state.snacksGiven = snacksGiven;
+  SET_ACTIVE_REQUEST(state: any, activeRequest: any) {
+    state.activeRequest = activeRequest;
   },
   SET_SOLUTION_ADAQUATELY_ANSWERED_RATING(state: any, solutionAdaquatelyAnsweredRating: number) {
     state.solutionAdaquatelyAnsweredRating = solutionAdaquatelyAnsweredRating;
@@ -35,4 +23,7 @@ export default {
   SET_SOLUTION_AS_JOKE_ANSWERED_FLAGS(state: any, solutionAsJokeAnsweredFlags: number) {
     state.solutionAsJokeAnsweredFlags = solutionAsJokeAnsweredFlags;
   },
+  SET_REQUESTS(state: any, requests: any) {
+    state.requests = requests;
+  }
 }
