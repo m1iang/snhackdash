@@ -1,9 +1,11 @@
 <script lang="ts">
+import Badge from "@/components/Badge.vue";
 import { auth, db } from "@/config/firebaseConfig";
 import router from "@/router";
 import { store } from "@/store";
 import { onAuthStateChanged } from "@firebase/auth";
 import { doc, onSnapshot, where } from "@firebase/firestore";
+import { BiCheckCircleFill } from "oh-vue-icons/icons";
 
 import {
   HiSortAscending,
@@ -34,6 +36,7 @@ export default {
       }
     });
     store.dispatch("user/fetchRequests");
+    store.dispatch("user/fetchDeliveries");
   },
   // created() {
   //   onSnapshot(doc(db, "requests", this.outGoingRequest.id), (doc: any) => {
@@ -51,6 +54,7 @@ export default {
   components: {
     HiSortAscending,
     HiSortDescending,
+    Badge,
   },
   methods: {
     logout() {
@@ -65,19 +69,123 @@ export default {
     navigateToSendSolutionPageWithRequestId(requestId: any) {
       router.push({ path: "/solution", query: { id: requestId } });
     },
+    acceptSolution(requestId: any) {
+      store.dispatch("user/acceptSolution", {
+        requestId: requestId,
+      });
+      this.deliveryStarted = "true";
+      store.dispatch("user/fetchDelivery", {
+        dashingUserId: this.userId,
+      });
+      if (this.getDelivery === "true") {
+        this.deliveryStarted = "true";
+      } else {
+        this.deliveryStarted = "false";
+        store.dispatch("user/startDelivery", {
+          requestId: requestId,
+          dashingUser: this.userId,
+          solutionUser:
+            this.findMyActiveRequest.solutionProviderId ||
+            this.findMyActiveRequest.temporalSolutionProviderId,
+          snack: this.findMyActiveRequest.snack,
+          location: this.findMyActiveRequest.location,
+          deliveryStarted: "false",
+        });
+      }
+    },
   },
   data() {
     return {
       descending: false,
       deliveryConfirmed: false,
+      deliveryStarted: "",
     };
   },
   computed: {
+    getDeliveries() {
+      return store.getters["user/getDeliveries"];
+    },
+    getDelivery() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => delivery.dashingUser === userId
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => delivery.solutionUser === userId
+      );
+      if (currentUserIsDasherDelivery) {
+        return currentUserIsDasherDelivery.deliveryStarted;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.deliveryStarted;
+      } else {
+        return "false";
+      }
+    },
+    getSnackOfDelivery() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => userId === delivery.dashingUser
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => userId === delivery.solutionUser
+      );
+      if (currentUserIsDasherDelivery) {
+        return currentUserIsDasherDelivery.snack;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.snack;
+      } else {
+        return "false";
+      }
+    },
+    getLocationOfDelivery() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => userId === delivery.dashingUser
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => userId === delivery.solutionUser
+      );
+
+      if (currentUserIsDasherDelivery) {
+        return currentUserIsDasherDelivery.location;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.location;
+      } else {
+        return "false";
+      }
+    },
+    findIfImBeingDashed() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => delivery.dashingUser === userId
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => delivery.solutionUser === userId
+      );
+      // console.log(currentUserIsDasherDelivery);
+      // console.log(currentUserIsSolutionProviderDelivery);
+      if (
+        currentUserIsSolutionProviderDelivery === undefined &&
+        currentUserIsDasherDelivery
+      ) {
+        return { dasher: "true", solution: "false" };
+      } else if (
+        currentUserIsDasherDelivery === undefined &&
+        currentUserIsSolutionProviderDelivery
+      ) {
+        return { solution: "true", dasher: "false" };
+      } else {
+        return { dasher: "false", solution: "false" };
+      }
+    },
     findMyActiveRequest() {
       const requests = this.requests;
       const userId = this.userId;
       const activeRequest = requests.find((request: any) => request.userId === userId);
-      console.log(userId);
       return activeRequest;
     },
     displayName() {
@@ -91,6 +199,40 @@ export default {
     },
     requests() {
       return store.getters["user/getRequests"];
+    },
+    getDashingUserName() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => delivery.dashingUser === userId
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => delivery.solutionUser === userId
+      );
+      if (currentUserIsDasherDelivery) {
+        return currentUserIsDasherDelivery.dashingUserName;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.dashingUserName;
+      } else {
+        return "false";
+      }
+    },
+    getSolutionUserName() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => delivery.dashingUser === userId
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => delivery.solutionUser === userId
+      );
+      if (currentUserIsDasherDelivery) {
+        return currentUserIsDasherDelivery.solutionUserName;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.solutionUserName;
+      } else {
+        return "false";
+      }
     },
     nonUserRequests() {
       const requests = this.requests;
@@ -135,17 +277,50 @@ export default {
       </aside>
       <div class="p-6 grow">
         <div class="flex flex-row space-x-4 pb-8 pt-4">
-          <div class="flex flex-col">
-            <h1 class="text-2xl pb-5 font-semibold">Your Current Request</h1>
-            <div
-              class="border border-2 border-gray-300 hover:border-[#fc935b] rounded-lg w-full"
-            >
-              <div class="p-5" v-if="findMyActiveRequest">
-                <h1 class="font-semibold">Your Request:</h1>
-                <h1 class="font-semibold">
-                  {{ findMyActiveRequest.question }}
+          <div class="">
+            <div class="flex flex-col w-full" v-if="getDelivery === 'false'">
+              <h1 class="text-2xl pb-5 font-semibold">Your Current Request</h1>
+              <div
+                class="border border-2 border-gray-300 hover:border-[#fc935b] rounded-lg w-full"
+              >
+                <div class="p-5" v-if="findMyActiveRequest">
+                  <h1 class="font-semibold text-3xl py-2">
+                    {{ findMyActiveRequest.question }}
+                  </h1>
+                  <div class="flex flex-row space-x-3">
+                    <Badge :text="findMyActiveRequest.status" />
+
+                    <v-icon
+                      @click="acceptSolution(findMyActiveRequest.requestId)"
+                      class="cursor-pointer hover:scale-125 transition-all ease-in-out duration-500 delay-300"
+                      name="bi-check-circle-fill"
+                      fill="lightgreen"
+                      scale="2"
+                      v-if="findMyActiveRequest.status === 'solution_proposed'"
+                    ></v-icon>
+                  </div>
+                  <p class="text-gray-500" v-html="findMyActiveRequest.description"></p>
+                </div>
+              </div>
+            </div>
+            <div class="border-2 p-3 rounded-lg" v-else-if="getDelivery === 'true'">
+              <div v-if="findIfImBeingDashed.dasher === 'true'">
+                <h1 class="font-semibold text-3xl py-2">
+                  Deliver the {{ getSnackOfDelivery }} to {{ getLocationOfDelivery }} 📌
                 </h1>
-                <p class="text-gray-500">{{ findMyActiveRequest.description }}</p>
+                <h1 class="font-semibold text-xl text-gray-400">
+                  You are delivering to
+                  <span class="text-[#fc935b]">{{ getSolutionUserName }}</span>
+                </h1>
+              </div>
+              <div class="" v-else-if="findIfImBeingDashed.solution === 'true'">
+                <h1 class="font-semibold text-3xl py-2">
+                  Waiting for...{{ getSnackOfDelivery }} @ {{ getLocationOfDelivery }} 📌
+                </h1>
+                <h1 class="font-semibold text-xl text-gray-400">
+                  <span class="text-[#fc935b]">{{ getDashingUserName }}</span> will be
+                  your courier.
+                </h1>
               </div>
             </div>
           </div>
@@ -177,7 +352,7 @@ export default {
               <h1 class="py-4 text-xl font-semibold lowercase text-gray-700">
                 {{ request.question }}
               </h1>
-              <p class="pb-2">{{ request.description }}</p>
+              <p class="pb-2" v-html="request.description"></p>
               <button
                 @click="navigateToSendSolutionPageWithRequestId(request.requestId)"
                 class="bg-[#fc935b] py-2 px-4 font-semibold hover:scale-105 transition-all duration-700 delay-200 ease-in-out text-white rounded-full"
