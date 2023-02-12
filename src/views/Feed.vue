@@ -67,9 +67,6 @@ export default {
         requestId: requestId,
       });
       this.deliveryStarted = "true";
-      store.dispatch("user/fetchDelivery", {
-        dashingUserId: this.userId,
-      });
       if (this.getDelivery === "true") {
         this.deliveryStarted = "true";
       } else {
@@ -82,7 +79,7 @@ export default {
             this.findMyActiveRequest.temporalSolutionProviderId,
           snack: this.findMyActiveRequest.snack,
           location: this.findMyActiveRequest.location,
-          deliveryStarted: "false",
+          deliveryStarted: "true",
         });
       }
     },
@@ -140,6 +137,7 @@ export default {
         (delivery: any) => delivery.solutionUser === userId
       );
       if (currentUserIsDasherDelivery) {
+        console.log(currentUserIsDasherDelivery.deliveryStarted);
         return currentUserIsDasherDelivery.deliveryStarted;
       } else if (currentUserIsSolutionProviderDelivery) {
         return currentUserIsSolutionProviderDelivery.deliveryStarted;
