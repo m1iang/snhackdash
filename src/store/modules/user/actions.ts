@@ -141,7 +141,7 @@ export default {
       solutionUser: solutionUser,
       solutionUserName: solutionUserName,
       deliveryStarted: deliveryStarted,
-      deliveryFinished: false,
+      deliveryFinished: "false",
       snack: snack,
       location: location,
     });
@@ -166,7 +166,7 @@ export default {
     const deliveryRefQuerySnapshot = await getDocs(deliveryRefQuery);
     const finalDeliveryDoc = deliveryRefQuerySnapshot.docs[0].ref;
     await updateDoc(finalDeliveryDoc, {
-      deliveryFinished: true,
+      deliveryFinished: "true",
     });
 
     const requestId = deliveryRefQuerySnapshot.docs[0].data().requestId;
