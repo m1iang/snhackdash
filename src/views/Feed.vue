@@ -1,18 +1,10 @@
 <script lang="ts">
 import Badge from "@/components/Badge.vue";
-import { auth, db } from "@/config/firebaseConfig";
+import { auth } from "@/config/firebaseConfig";
 import router from "@/router";
 import { store } from "@/store";
 import { onAuthStateChanged } from "@firebase/auth";
-import { doc, onSnapshot, where } from "@firebase/firestore";
-import { BiCheckCircleFill } from "oh-vue-icons/icons";
-
-import {
-  HiSortAscending,
-  HiSortDescending,
-  HiLogout,
-  IoSettingsOutline,
-} from "oh-vue-icons/icons";
+import { HiSortAscending, HiSortDescending } from "oh-vue-icons/icons";
 
 export default {
   title: "Feed",

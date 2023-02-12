@@ -14,6 +14,7 @@ export default {
       }
     });
   },
+
   emits: {
     click: null,
     submit: ({
@@ -21,14 +22,17 @@ export default {
       solution,
       snack,
       location,
+      address,
       status,
+
       temporalSolutionProviderId,
     }: any) => {
-      if (snack && location && solution && status) {
+      if (snack && location && address && solution && status) {
         store.dispatch("user/makeSolution", {
           requestId: requestId,
           snack: snack,
           location: location,
+          address: address,
           solution: solution,
           status: status,
           solutionProviderId: temporalSolutionProviderId,
@@ -57,11 +61,17 @@ export default {
       console.log(this.$route.query.id);
       return this.$route.query.id;
     },
+    mapsAPIKey() {
+      return `https://maps.googleapis.com/maps/api/js?key=${
+        import.meta.env.VITE_googleMapsAPIKey
+      }&libraries=places`;
+    },
   },
   data() {
     return {
       snack: "",
       location: "",
+      address: "",
       solution: "",
       requestId: "",
       temporalSolutionProviderId: "",
@@ -72,11 +82,15 @@ export default {
       this.$emit("submit", {
         snack: this.snack,
         location: this.location,
+        address: this.address,
         status: "solution_proposed",
         solution: this.solution,
         requestId: this.getRequestId,
         temporalSolutionProviderId: this.userId,
       });
+    },
+    getAddressData({ addressData, placeResultData, id }: any) {
+      this.address = addressData;
     },
     goBackToFeed() {
       window.history.back();

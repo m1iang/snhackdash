@@ -15,7 +15,7 @@
           >
           <router-link
             class="text-lg text-white hover:underline hover:decoration-[#fc935b] hover:decoration-2 underline-offset-4"
-            to="/dashers"
+            to="/dashboard"
             >Order</router-link
           >
           <router-link v-if="isLoggedIn == false" to="/login"
