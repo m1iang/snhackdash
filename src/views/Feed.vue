@@ -37,6 +37,7 @@ export default {
     });
     store.dispatch("user/fetchRequests");
     store.dispatch("user/fetchDeliveries");
+    store.dispatch("user/destroyCompletedTransactions");
   },
   // created() {
   //   onSnapshot(doc(db, "requests", this.outGoingRequest.id), (doc: any) => {
@@ -93,17 +94,50 @@ export default {
         });
       }
     },
+    completeDelivery(deliveryId: any) {
+      store.dispatch("user/finishDelivery", {
+        deliveryId: deliveryId,
+      });
+      this.deliveryConfirmed = "true";
+    },
   },
   data() {
     return {
       descending: false,
-      deliveryConfirmed: false,
+      deliveryConfirmed: "",
       deliveryStarted: "",
     };
   },
   computed: {
     getDeliveries() {
       return store.getters["user/getDeliveries"];
+    },
+    canDisplaySolution() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => delivery.dashingUser === userId
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => delivery.solutionUser === userId
+      );
+      if (currentUserIsDasherDelivery) {
+        console.log(currentUserIsDasherDelivery.deliveryFinished);
+        return currentUserIsDasherDelivery.deliveryFinished;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.deliveryFinished;
+      } else {
+        return "false";
+      }
+    },
+    displaySolution() {
+      const requests = this.requests;
+      const userId = this.userId;
+      const activeRequest = requests.find((request: any) => request.userId === userId);
+      const request = activeRequest;
+      return (
+        request.solution || request.temporalSolution || store.getters["user/getSolution"]
+      );
     },
     getDelivery() {
       const deliveries = this.getDeliveries;
@@ -172,14 +206,22 @@ export default {
         currentUserIsSolutionProviderDelivery === undefined &&
         currentUserIsDasherDelivery
       ) {
-        return { dasher: "true", solution: "false" };
+        return {
+          dasher: "true",
+          solution: "false",
+          deliverId: currentUserIsDasherDelivery.deliveryId,
+        };
       } else if (
         currentUserIsDasherDelivery === undefined &&
         currentUserIsSolutionProviderDelivery
       ) {
-        return { solution: "true", dasher: "false" };
+        return {
+          solution: "true",
+          dasher: "false",
+          deliverId: currentUserIsSolutionProviderDelivery.deliveryId,
+        };
       } else {
-        return { dasher: "false", solution: "false" };
+        return { dasher: "false", solution: "false", deliverId: "" };
       }
     },
     findMyActiveRequest() {
@@ -277,7 +319,7 @@ export default {
       </aside>
       <div class="p-6 grow">
         <div class="flex flex-row space-x-4 pb-8 pt-4">
-          <div class="">
+          <div v-if="canDisplaySolution === 'false'" class="">
             <div class="flex flex-col w-full" v-if="getDelivery === 'false'">
               <h1 class="text-2xl pb-5 font-semibold">Your Current Request</h1>
               <div
@@ -314,15 +356,37 @@ export default {
                 </h1>
               </div>
               <div class="" v-else-if="findIfImBeingDashed.solution === 'true'">
-                <h1 class="font-semibold text-3xl py-2">
-                  Waiting for...{{ getSnackOfDelivery }} @ {{ getLocationOfDelivery }} 📌
-                </h1>
-                <h1 class="font-semibold text-xl text-gray-400">
-                  <span class="text-[#fc935b]">{{ getDashingUserName }}</span> will be
-                  your courier.
-                </h1>
+                <div class="" v-if="deliveryConfirmed === 'false'">
+                  <h1 class="font-semibold text-3xl py-2">
+                    Waiting for...{{ getSnackOfDelivery }} @
+                    {{ getLocationOfDelivery }} 📌
+                  </h1>
+                  <h1 class="font-semibold text-xl text-gray-400">
+                    <span class="text-[#fc935b]">{{ getDashingUserName }}</span> will be
+                    your courier.
+                  </h1>
+
+                  <div class="flex flex-row space-x-2 py-4 content-center">
+                    <h1 class="font-semibold text-gray-400 align-baseline">
+                      Got your delivery? Hit
+                    </h1>
+                    <button
+                      @click="completeDelivery(findIfImBeingDashed.deliverId)"
+                      class="font-semibold text-white px-4 py-2 rounded-full drop-shadow-xl hover:scale-105 transition-all ease-in-out duration-500 delay-300 w-fit bg-gradient-to-r from-orange-500 via-amber-500 to-red-300"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+          <div
+            class="p-5 border border-2 border-gray-300 hover:border-[#fc935b] rounded-lg w-full"
+            v-else
+          >
+            <h1 class="font-semibold text-xl text-[#fc935b]">Your solution 🎉</h1>
+            <p v-html="displaySolution"></p>
           </div>
         </div>
 

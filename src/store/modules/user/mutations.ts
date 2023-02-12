@@ -25,5 +25,15 @@ export default {
   },
   SET_REQUESTS(state: any, requests: any) {
     state.requests = requests;
+  },
+  SET_DELIVERY(state: any, delivery: any) {
+    state.delivery = delivery;
+  },
+  SET_DELIVERIES(state: any, deliveries: any) {
+    state.deliveries = deliveries;
+  },
+  SET_SOLUTION(state: any, solution: string) {
+    state.solution = solution;
   }
+
 }

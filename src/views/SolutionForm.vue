@@ -16,7 +16,14 @@ export default {
   },
   emits: {
     click: null,
-    submit: ({ requestId, solution, snack, location, status }: any) => {
+    submit: ({
+      requestId,
+      solution,
+      snack,
+      location,
+      status,
+      temporalSolutionProviderId,
+    }: any) => {
       if (snack && location && solution && status) {
         store.dispatch("user/makeSolution", {
           requestId: requestId,
@@ -24,6 +31,7 @@ export default {
           location: location,
           solution: solution,
           status: status,
+          solutionProviderId: temporalSolutionProviderId,
         });
         return true;
       }
@@ -56,6 +64,7 @@ export default {
       location: "",
       solution: "",
       requestId: "",
+      temporalSolutionProviderId: "",
     };
   },
   methods: {
@@ -66,6 +75,7 @@ export default {
         status: "solution_proposed",
         solution: this.solution,
         requestId: this.getRequestId,
+        temporalSolutionProviderId: this.userId,
       });
     },
     goBackToFeed() {

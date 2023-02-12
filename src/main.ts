@@ -10,9 +10,9 @@ import titleMixin from './mixins/titleMixin'
 import router from './router'
 
 
-import { HiLogin, HiLogout, HiSolidChevronRight, BiArrowRightSquareFill, HiSortAscending, HiSortDescending, IoSettingsOutline } from "oh-vue-icons/icons";
+import { HiLogin, HiLogout, HiSolidChevronRight, BiArrowRightSquareFill, HiSortAscending, HiSortDescending, IoSettingsOutline, BiCheckCircleFill } from "oh-vue-icons/icons";
 
-addIcons(HiLogin, HiLogout, HiSolidChevronRight, BiArrowRightSquareFill, HiSortDescending, HiSortAscending, IoSettingsOutline)
+addIcons(HiLogin, HiLogout, HiSolidChevronRight, BiArrowRightSquareFill, HiSortDescending, HiSortAscending, IoSettingsOutline, BiCheckCircleFill)
 
 
 createApp(App)

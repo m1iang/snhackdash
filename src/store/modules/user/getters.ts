@@ -13,6 +13,14 @@ export default {
   },
   getRequests(state: any) {
     return state.requests;
+  },
+  getDelivery(state: any) {
+    return state.delivery;
+  },
+  getDeliveries(state: any) {
+    return state.deliveries;
+  },
+  getSolution(state: any) {
+    return state.solution;
   }
-
 }
