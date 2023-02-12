@@ -14,6 +14,7 @@ export default {
         return true;
       }
       return false;
+      alert("Please fill in all the fields correctly");
     },
   },
   computed: {

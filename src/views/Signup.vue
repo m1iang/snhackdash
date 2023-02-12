@@ -22,6 +22,7 @@ export default {
         });
         return true;
       }
+      alert("Please fill in all the fields correctly");
       return false;
     },
   },
