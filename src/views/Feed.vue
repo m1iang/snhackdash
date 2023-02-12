@@ -128,8 +128,10 @@ export default {
         (delivery: any) => delivery.solutionUser === userId
       );
       if (currentUserIsDasherDelivery) {
+        console.log(currentUserIsDasherDelivery.deliveryFinished);
         return currentUserIsDasherDelivery.deliveryFinished;
       } else if (currentUserIsSolutionProviderDelivery) {
+        console.log(currentUserIsSolutionProviderDelivery.deliveryFinished);
         return currentUserIsSolutionProviderDelivery.deliveryFinished;
       } else {
         return "false";
@@ -387,7 +389,7 @@ export default {
           </div>
           <div
             class="p-5 border border-2 border-gray-300 hover:border-[#fc935b] rounded-lg w-full"
-            v-else
+            v-else-if="canDisplaySolution === 'true'"
           >
             <h1 class="font-semibold text-xl text-[#fc935b]">Your solution 🎉</h1>
             <p v-html="displaySolution"></p>
