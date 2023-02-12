@@ -334,13 +334,8 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="border-2 p-3 rounded-lg" v-else-if="getDelivery === 'true'">
-              <div
-                v-if="
-                  findIfImBeingDashed.dasher === 'true' &&
-                  findIfImBeingDashed.solution === 'false'
-                "
-              >
+            <div class="border-2 p-3 rounded-lg" v-if="getDelivery === 'true'">
+              <div v-if="findIfImBeingDashed.dasher === 'true'">
                 <h1 class="font-semibold text-3xl py-2">
                   Deliver the {{ getSnackOfDelivery }} to {{ getLocationOfDelivery }} 📌
                 </h1>
@@ -349,13 +344,7 @@ export default {
                   <span class="text-[#fc935b]">{{ getSolutionUserName }}</span>
                 </h1>
               </div>
-              <div
-                class=""
-                v-if="
-                  findIfImBeingDashed.solution === 'true' &&
-                  findIfImBeingDashed.dasher === 'false'
-                "
-              >
+              <div class="" v-if="findIfImBeingDashed.solution === 'true'">
                 <div class="" v-if="deliveryConfirmed === 'false'">
                   <h1 class="font-semibold text-3xl py-2">
                     Waiting for...{{ getSnackOfDelivery }} @
