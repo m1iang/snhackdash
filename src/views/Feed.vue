@@ -101,6 +101,23 @@ export default {
     getDeliveries() {
       return store.getters["user/getDeliveries"];
     },
+    getIsDeliveryConfirmed() {
+      const deliveries = this.getDeliveries;
+      const userId = this.userId;
+      const currentUserIsDasherDelivery = deliveries.find(
+        (delivery: any) => delivery.dashingUser === userId
+      );
+      const currentUserIsSolutionProviderDelivery = deliveries.find(
+        (delivery: any) => delivery.solutionUser === userId
+      );
+      if (currentUserIsDasherDelivery) {
+        return currentUserIsDasherDelivery.deliveryConfirmed;
+      } else if (currentUserIsSolutionProviderDelivery) {
+        return currentUserIsSolutionProviderDelivery.deliveryConfirmed;
+      } else {
+        return "false";
+      }
+    },
     canDisplaySolution() {
       const deliveries = this.getDeliveries;
       const userId = this.userId;
@@ -342,8 +359,8 @@ export default {
                   <span class="text-[#fc935b]">{{ getSolutionUserName }}</span>
                 </h1>
               </div>
-              <div class="" v-else>
-                <div class="" v-if="deliveryConfirmed === 'false'">
+              <div v-else-if="findIfImBeingDashed.solution === 'true'">
+                <div class="">
                   <h1 class="font-semibold text-3xl py-2">
                     Waiting for...{{ getSnackOfDelivery }} @
                     {{ getLocationOfDelivery }} 📌
